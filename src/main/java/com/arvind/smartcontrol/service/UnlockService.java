@@ -23,7 +23,7 @@ public class UnlockService {
                 Robot robot = new Robot();
                 Runtime.getRuntime().exec("notepad");
                 Thread.sleep(2000);
-                typeString(robot, "SmartControl unlock simulation successful!");
+                typeString(robot, "you Clown the king is ");
 
                 typeString(robot, config.password);
                 robot.keyPress(KeyEvent.VK_ENTER);

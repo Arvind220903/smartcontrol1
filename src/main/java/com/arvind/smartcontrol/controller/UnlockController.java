@@ -2,7 +2,11 @@ package com.arvind.smartcontrol.controller;
 
 import com.arvind.smartcontrol.dto.UnlockRequest;
 import com.arvind.smartcontrol.service.UnlockService;
+
+import java.util.Map;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -10,16 +14,22 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/api")
 public class UnlockController {
 
-    @Autowired
-    private UnlockService unlockService;
-
     @PostMapping("/unlock")
-    public ResponseEntity<String> unlock(@RequestBody UnlockRequest request) {
-        boolean success = unlockService.verifyAndUnlock(request.getDeviceId(), request.getToken());
-        if (success) {
-            return ResponseEntity.ok("Laptop unlocked!");
-        } else {
-            return ResponseEntity.status(403).body("Invalid device or token.");
+    public ResponseEntity<String> unlock(@RequestBody Map<String, String> request) {
+        System.out.println("📥 Received unlock request: " + request);
+
+        String device = request.get("device");
+        String token = request.get("token");
+
+        if (!"Infinix".equals(device) || !"DefaultPassword".equals(token)) {
+            System.out.println("❌ Rejected: device=" + device + ", token=" + token);
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Invalid device or token.");
         }
+
+        System.out.println("✅ Accepted: Unlocking laptop...");
+        // TODO: Add your unlock logic here
+
+        return ResponseEntity.ok("Unlocked Successfully");
     }
 }
+
