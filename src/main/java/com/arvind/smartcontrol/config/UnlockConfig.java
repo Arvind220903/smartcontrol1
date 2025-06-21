@@ -1,14 +1,11 @@
 package com.arvind.smartcontrol.config;
 
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.annotation.Configuration;
+import org.springframework.stereotype.Component;
 
-@Configuration
+@Component
 public class UnlockConfig {
-
-    @Value("${smartcontrol.password}")
-    public String password;
-
-    @Value("${smartcontrol.unlock.delay}")
-    public int delay;
+    public String deviceId = "trusted-device-123";
+    public String token = "secure-token";
+    public String password = "mySecureWindowsPassword"; // type this exactly
+    public int delay = 2000; // ms
 }
