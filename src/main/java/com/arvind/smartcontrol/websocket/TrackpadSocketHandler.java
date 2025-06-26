@@ -1,28 +1,20 @@
 package com.arvind.smartcontrol.websocket;
 
+import org.springframework.stereotype.Component;
 import org.springframework.web.socket.*;
 import org.springframework.web.socket.handler.TextWebSocketHandler;
 
-import java.awt.*;
-
+@Component
 public class TrackpadSocketHandler extends TextWebSocketHandler {
-    Robot robot;
 
-    public TrackpadSocketHandler() throws AWTException {
-        robot = new Robot();
+    @Override
+    public void afterConnectionEstablished(WebSocketSession session) throws Exception {
+        System.out.println("🟢 Connection established!");
+        session.sendMessage(new TextMessage("Welcome 👋"));
     }
 
     @Override
-    public void handleTextMessage(WebSocketSession session, TextMessage message) {
-        try {
-            String[] parts = message.getPayload().split(",");
-            double dx = Double.parseDouble(parts[0]);
-            double dy = Double.parseDouble(parts[1]);
-
-            Point current = MouseInfo.getPointerInfo().getLocation();
-            robot.mouseMove((int)(current.x + dx), (int)(current.y + dy));
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+    public void handleTextMessage(WebSocketSession session, TextMessage message) throws Exception {
+        System.out.println("📩 Message received: " + message.getPayload());
     }
 }
