@@ -13,6 +13,24 @@ public class UnlockService {
     @Autowired
     private UnlockConfig config;
 
+    // ✅ Option 1: Use AHK Script to unlock Windows
+    public boolean runWindowsUnlockScript() {
+        try {
+           // 📌 Your script path
+            Runtime.getRuntime().exec(new String[] {
+            	    "C:\\Program Files\\AutoHotkey\\AutoHotkey.exe",
+            	    "C:\\smartcontrol\\scripts\\unlock.ahk"
+            	});
+
+            System.out.println("🚀 AHK script executed.");
+            return true;
+        } catch (Exception e) {
+            System.err.println("❌ Failed to run AHK script: " + e.getMessage());
+            return false;
+        }
+    }
+
+    // ✅ Option 2: Simulate typing (legacy fallback method)
     public boolean verifyAndUnlock(String deviceId, String token) {
         if (config.deviceId.equals(deviceId) && config.token.equals(token)) {
             System.out.println("✅ Verified device and token");
@@ -22,12 +40,12 @@ public class UnlockService {
 
                 Robot robot = new Robot();
 
-                // OPTIONAL: Open notepad or another command
+                // Open Notepad (or skip this if doing real unlock)
                 Runtime.getRuntime().exec("notepad");
-                Thread.sleep(1000); // Give notepad time to open
+                Thread.sleep(1000); // Give Notepad time to open
 
-                typeString(robot, config.password); // Type password
-                robot.keyPress(KeyEvent.VK_ENTER);  // Press enter
+                typeString(robot, config.password);
+                robot.keyPress(KeyEvent.VK_ENTER);
                 robot.keyRelease(KeyEvent.VK_ENTER);
 
                 System.out.println("🔓 Unlock sequence executed");
@@ -44,15 +62,17 @@ public class UnlockService {
         return false;
     }
 
+    // 🔠 Helper method to type full strings
     private void typeString(Robot robot, String text) {
         for (char c : text.toCharArray()) {
             typeChar(robot, c);
             try {
-                Thread.sleep(50);
+                Thread.sleep(50); // slight delay between keystrokes
             } catch (InterruptedException ignored) {}
         }
     }
 
+    // ⌨️ Helper method to type one character
     private void typeChar(Robot robot, char c) {
         try {
             boolean upperCase = Character.isUpperCase(c);

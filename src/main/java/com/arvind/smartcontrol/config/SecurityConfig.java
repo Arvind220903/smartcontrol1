@@ -2,24 +2,23 @@ package com.arvind.smartcontrol.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.web.SecurityFilterChain;
+import static org.springframework.security.config.Customizer.withDefaults;
+
 
 @Configuration
 public class SecurityConfig {
-
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-        http
-            .csrf(csrf -> csrf.disable()) // Disable CSRF for API testing
+        return http
+            .csrf(csrf -> csrf.disable())
             .authorizeHttpRequests(auth -> auth
-            		.requestMatchers("/hello", "/api/unlock").permitAll()
- // Allow access without login
-                .anyRequest().authenticated()           // Protect other endpoints
+                .requestMatchers("/trackpad/move").permitAll()  // 👈 Allow public access
+                .anyRequest().authenticated()
             )
-            .httpBasic(Customizer.withDefaults());      // Use HTTP Basic Auth (if needed)
-        
-        return http.build();
+            .formLogin(withDefaults())
+            .httpBasic(withDefaults())
+            .build();
     }
 }
